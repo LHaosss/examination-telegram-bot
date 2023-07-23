@@ -2,6 +2,10 @@
 
 [Chinese](./doc/README.md)
 
+> You need to configure `BOT_TOKEN` in the `.env` file before running
+>
+> The demo video is under the doc folder
+
 ### init
 
 ```md
