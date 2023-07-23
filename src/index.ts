@@ -1,34 +1,37 @@
-import { Bot } from "grammy"
-import { Menu } from "@grammyjs/menu"
+import { Bot, session } from "grammy"
+import { createConversation, conversations } from "@grammyjs/conversations"
+import MainMenuCreator from "./menu"
+import talk, { type MyContext } from "./talk"
 
-// 创建一个 bot。
-const bot = new Bot("6046914308:AAFn6o-EXAGOHkHp4zA1JgjSJ2Ux9WWksjQ")
+// create a bot.
+const bot = new Bot<MyContext>("6046914308:AAFn6o-EXAGOHkHp4zA1JgjSJ2Ux9WWksjQ")
 
-// switch菜单栏
-const switchMenu = new Menu("switch-menu")
-  .text("Add", (ctx) => ctx.reply("You pressed Add!"))
-  .back("Switch")
-  .row()
-  .text("Sell 1", (ctx) => ctx.reply("You pressed Sell 1!"))
-  .text("Sell 2", (ctx) => ctx.reply("You pressed Sell 2!"))
-  .text("Sell 3", (ctx) => ctx.reply("You pressed Sell 3!"))
+// register session in bot
+bot.use(
+  session({
+    initial() {
+      return {}
+    },
+  }),
+)
 
-// main菜单栏
-const mainMenu = new Menu("root-menu")
-  .text("Add", (ctx) => ctx.reply("You pressed Add!"))
-  .submenu("Switch", "switch-menu")
-  .row()
-  .text("Buy 0.01", (ctx) => ctx.reply("You pressed Buy 0.01"))
-  .text("Buy 0.05", (ctx) => ctx.reply("You pressed Buy 0.05"))
+// register conversations plugin in bot
+bot.use(conversations())
 
-mainMenu.register(switchMenu, "root-menu")
+// register conversation in bot
+bot.use(createConversation(talk, "talk"))
 
-// 使其具有互动性。
+// create mainMenu
+const mainMenu = MainMenuCreator()
+
+// register menu in bot
 bot.use(mainMenu)
 
+// set replay content
 bot.command("start", async (ctx) => {
-  // 发送菜单。
-  await ctx.reply("Check out this menu:", { reply_markup: mainMenu })
+  await ctx.reply("Check out this menu:", {
+    reply_markup: mainMenu,
+  })
 })
 
 bot.start()
