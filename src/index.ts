@@ -2,9 +2,10 @@ import { Bot, session } from "grammy"
 import { createConversation, conversations } from "@grammyjs/conversations"
 import MainMenuCreator from "./menu"
 import talk, { type MyContext } from "./talk"
+import "dotenv/config"
 
 // create a bot.
-const bot = new Bot<MyContext>("6046914308:AAFn6o-EXAGOHkHp4zA1JgjSJ2Ux9WWksjQ")
+const bot = new Bot<MyContext>(process.env.BOT_TOKEN)
 
 // register session in bot
 bot.use(

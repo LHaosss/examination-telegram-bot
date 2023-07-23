@@ -5,13 +5,14 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc --build --verbose",
+    "build": "tsc --build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "cz": "git cz"
   },
   "author": "LHaosss",
   "license": "ISC",
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/node": "^20.4.4",
     "cz-conventional-changelog": "^3.3.0",
     "ts-node": "^10.9.1",
