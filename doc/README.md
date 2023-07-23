@@ -1,5 +1,9 @@
 # examination-telegram-bot
 
+> 注：在运行前需要配置 `.env`文件中的 `BOT_TOKEN`
+>
+> 演示视频存放在doc文件夹下
+
 ### init
 
 ```md
