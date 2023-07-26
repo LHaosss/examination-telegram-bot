@@ -1,8 +1,13 @@
 import { type Conversation, type ConversationFlavor } from "@grammyjs/conversations"
-import { Context } from "grammy"
+import { Context, SessionFlavor } from "grammy"
+
+export interface SessionData {
+  name: string
+  address: string
+}
 
 // MyContext, customizable type, provided for bot and menu
-export type MyContext = Context & ConversationFlavor
+export type MyContext = Context & SessionFlavor<SessionData> & ConversationFlavor
 type MyConversation = Conversation<MyContext>
 
 // conversation
@@ -13,10 +18,11 @@ export default async function talk(conversation: MyConversation, ctx: MyContext)
   })
 
   // get user first input and valid it
-  const { message } = await conversation.wait()
-  const name = message.text
-  if (name.length > 8) {
+  const nameMessage = await conversation.wait()
+  ctx.session.name = nameMessage.message.text
+  if (ctx.session.name.length > 8) {
     await ctx.reply("This is not a valid wallet name. Name must be alphanumeric, 8 letters max.")
+    // return from conversation
     return
   }
 
@@ -28,13 +34,13 @@ export default async function talk(conversation: MyConversation, ctx: MyContext)
   // get user second input and valid it
   const zg = /^[0-9a-zA-Z]*$/
 
-  const msg = await conversation.wait()
-  const address = msg.message.text
-  console.log(zg.test(address))
-  if (address.length !== 42 || !address.startsWith("0x") || !zg.test(address)) {
+  const addressMessage = await conversation.wait()
+  ctx.session.address = addressMessage.message.text
+  if (ctx.session.address.length !== 42 || !ctx.session.address.startsWith("0x") || !zg.test(ctx.session.address)) {
     await ctx.reply("This is not a valid wallet address. Please try again.")
+    // return from conversation
     return
   }
-  ctx.reply(`Added ARB wallet(${name})
-  ${address}`)
+  ctx.reply(`Added ARB wallet(${ctx.session.name})
+  ${ctx.session.address}`)
 }

@@ -1,8 +1,9 @@
 import { Bot, session } from "grammy"
 import { createConversation, conversations } from "@grammyjs/conversations"
 import MainMenuCreator from "./menu"
-import talk, { type MyContext } from "./talk"
+import talk, { type MyContext, SessionData } from "./talk"
 import "dotenv/config"
+import { freeStorage } from "@grammyjs/storage-free"
 
 // create a bot.
 const bot = new Bot<MyContext>(process.env.BOT_TOKEN)
@@ -10,9 +11,8 @@ const bot = new Bot<MyContext>(process.env.BOT_TOKEN)
 // register session in bot
 bot.use(
   session({
-    initial() {
-      return {}
-    },
+    storage: freeStorage<SessionData>(bot.token),
+    initial: () => ({ name: "", address: "" }),
   }),
 )
 
